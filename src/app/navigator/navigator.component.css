@@ -1,0 +1,61 @@
+:host {
+    background-color: #222222;
+    display:inline-block;
+    width:100%;
+    
+    font-size:1em;
+}
+
+:host .active {
+	color: #FFFFFF;
+    background-color: #4CAF50;
+}
+
+:host #logo{
+    background-image: url(../../assets/image/logo_comic_pack.png);
+    background-size: 1em 1em;
+    background-position: 0.25em center;
+    background-repeat: no-repeat;
+    
+    padding-left: 1.5em;
+    padding-right: 0.5em;
+    
+    
+    border-right:1px solid #bbb;
+}
+
+:host ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    vertical-align:text-top;
+}
+
+:host li {
+    color: white;
+    float: left;
+}
+
+:host li span {
+    padding:0.75em 0.1em;
+    display:block;
+}
+
+:host li a {
+	color: rgb(210,210,210);
+    text-align: center;
+    text-decoration: none;
+    padding:0.75em;
+    display:block;
+}
+
+:host li a img {
+	width:1.25em;
+    display:block;
+}
+
+:host li a:hover {
+	color: #FAFAFA;
+    background-color: #111111;
+}
