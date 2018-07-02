@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package model;
+
+message comic
+{
+	required string name = 1;
+	repeated tagGroups tagGroups = 2;
+	required img cover = 3;
+	repeated img gallery = 4;
+}
+
+message tagGroups
+{
+	required string name = 1;
+	repeated string tags = 2;
+}
+
+message img
+{
+	required string url = 1;
+}

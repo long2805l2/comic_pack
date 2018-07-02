@@ -1,0 +1,19 @@
+{
+  "name": "project20180629",
+  "version": "0.0.1",
+  "description": "comic-pack server side",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node ./node_modules/nodemon/bin/nodemon.js",
+    "build": "node ./node_modules/protobufjs/cli/bin/pbjs -t static-module -p ./protos -w commonjs -o ./js/protos.js ./protos/*.proto"
+  },
+  "author": "longph",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3",
+    "nodemon": "^1.17.5",
+    "protobufjs": "^6.8.6",
+    "socket.io": "^2.1.1"
+  }
+}

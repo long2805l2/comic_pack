@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package cmd;
+import "model.proto";
+
+message requestComic
+{
+	required string id = 1;
+}
+
+message responseComic
+{
+	optional string error = 1;
+	optional comic comic = 2;
+}
