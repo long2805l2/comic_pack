@@ -438,6 +438,7 @@ $root.model = (function() {
          * Properties of a comic.
          * @memberof model
          * @interface Icomic
+         * @property {string} id comic id
          * @property {string} name comic name
          * @property {Array.<model.ItagGroups>|null} [tagGroups] comic tagGroups
          * @property {model.Iimg} cover comic cover
@@ -460,6 +461,14 @@ $root.model = (function() {
                     if (properties[keys[i]] != null)
                         this[keys[i]] = properties[keys[i]];
         }
+
+        /**
+         * comic id.
+         * @member {string} id
+         * @memberof model.comic
+         * @instance
+         */
+        comic.prototype.id = "";
 
         /**
          * comic name.
@@ -517,14 +526,15 @@ $root.model = (function() {
         comic.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            writer.uint32(/* id 1, wireType 2 =*/10).string(message.name);
+            writer.uint32(/* id 1, wireType 2 =*/10).string(message.id);
+            writer.uint32(/* id 2, wireType 2 =*/18).string(message.name);
             if (message.tagGroups != null && message.tagGroups.length)
                 for (var i = 0; i < message.tagGroups.length; ++i)
-                    $root.model.tagGroups.encode(message.tagGroups[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-            $root.model.img.encode(message.cover, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                    $root.model.tagGroups.encode(message.tagGroups[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            $root.model.img.encode(message.cover, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
             if (message.gallery != null && message.gallery.length)
                 for (var i = 0; i < message.gallery.length; ++i)
-                    $root.model.img.encode(message.gallery[i], writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                    $root.model.img.encode(message.gallery[i], writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
             return writer;
         };
 
@@ -560,17 +570,20 @@ $root.model = (function() {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
                 case 1:
-                    message.name = reader.string();
+                    message.id = reader.string();
                     break;
                 case 2:
+                    message.name = reader.string();
+                    break;
+                case 3:
                     if (!(message.tagGroups && message.tagGroups.length))
                         message.tagGroups = [];
                     message.tagGroups.push($root.model.tagGroups.decode(reader, reader.uint32()));
                     break;
-                case 3:
+                case 4:
                     message.cover = $root.model.img.decode(reader, reader.uint32());
                     break;
-                case 4:
+                case 5:
                     if (!(message.gallery && message.gallery.length))
                         message.gallery = [];
                     message.gallery.push($root.model.img.decode(reader, reader.uint32()));
@@ -580,6 +593,8 @@ $root.model = (function() {
                     break;
                 }
             }
+            if (!message.hasOwnProperty("id"))
+                throw $util.ProtocolError("missing required 'id'", { instance: message });
             if (!message.hasOwnProperty("name"))
                 throw $util.ProtocolError("missing required 'name'", { instance: message });
             if (!message.hasOwnProperty("cover"))
@@ -614,6 +629,8 @@ $root.model = (function() {
         comic.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (!$util.isString(message.id))
+                return "id: string expected";
             if (!$util.isString(message.name))
                 return "name: string expected";
             if (message.tagGroups != null && message.hasOwnProperty("tagGroups")) {
@@ -654,6 +671,8 @@ $root.model = (function() {
             if (object instanceof $root.model.comic)
                 return object;
             var message = new $root.model.comic();
+            if (object.id != null)
+                message.id = String(object.id);
             if (object.name != null)
                 message.name = String(object.name);
             if (object.tagGroups) {
@@ -702,9 +721,12 @@ $root.model = (function() {
                 object.gallery = [];
             }
             if (options.defaults) {
+                object.id = "";
                 object.name = "";
                 object.cover = null;
             }
+            if (message.id != null && message.hasOwnProperty("id"))
+                object.id = message.id;
             if (message.name != null && message.hasOwnProperty("name"))
                 object.name = message.name;
             if (message.tagGroups && message.tagGroups.length) {
@@ -968,6 +990,7 @@ $root.model = (function() {
          * Properties of an img.
          * @memberof model
          * @interface Iimg
+         * @property {string} name img name
          * @property {string} url img url
          */
 
@@ -985,6 +1008,14 @@ $root.model = (function() {
                     if (properties[keys[i]] != null)
                         this[keys[i]] = properties[keys[i]];
         }
+
+        /**
+         * img name.
+         * @member {string} name
+         * @memberof model.img
+         * @instance
+         */
+        img.prototype.name = "";
 
         /**
          * img url.
@@ -1018,7 +1049,8 @@ $root.model = (function() {
         img.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            writer.uint32(/* id 1, wireType 2 =*/10).string(message.url);
+            writer.uint32(/* id 1, wireType 2 =*/10).string(message.name);
+            writer.uint32(/* id 2, wireType 2 =*/18).string(message.url);
             return writer;
         };
 
@@ -1054,6 +1086,9 @@ $root.model = (function() {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
                 case 1:
+                    message.name = reader.string();
+                    break;
+                case 2:
                     message.url = reader.string();
                     break;
                 default:
@@ -1061,6 +1096,8 @@ $root.model = (function() {
                     break;
                 }
             }
+            if (!message.hasOwnProperty("name"))
+                throw $util.ProtocolError("missing required 'name'", { instance: message });
             if (!message.hasOwnProperty("url"))
                 throw $util.ProtocolError("missing required 'url'", { instance: message });
             return message;
@@ -1093,6 +1130,8 @@ $root.model = (function() {
         img.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (!$util.isString(message.name))
+                return "name: string expected";
             if (!$util.isString(message.url))
                 return "url: string expected";
             return null;
@@ -1110,6 +1149,8 @@ $root.model = (function() {
             if (object instanceof $root.model.img)
                 return object;
             var message = new $root.model.img();
+            if (object.name != null)
+                message.name = String(object.name);
             if (object.url != null)
                 message.url = String(object.url);
             return message;
@@ -1128,8 +1169,12 @@ $root.model = (function() {
             if (!options)
                 options = {};
             var object = {};
-            if (options.defaults)
+            if (options.defaults) {
+                object.name = "";
                 object.url = "";
+            }
+            if (message.name != null && message.hasOwnProperty("name"))
+                object.name = message.name;
             if (message.url != null && message.hasOwnProperty("url"))
                 object.url = message.url;
             return object;

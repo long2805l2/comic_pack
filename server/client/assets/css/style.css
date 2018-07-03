@@ -1,0 +1,25 @@
+* {
+	margin: 0px;
+	padding: 0px;
+	box-sizing: content-box;
+}
+
+body {
+	background-color: #333333;
+}
+
+.gallery {
+	width: 100%;
+	min-width: 800px;
+	display: block;
+}
+
+.gallery img {
+	width: 100%;
+    pointer-events: none;
+}
+
+.gallery canvas {
+	width: 100%;
+    pointer-events: none;
+}

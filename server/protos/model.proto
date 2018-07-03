@@ -4,10 +4,11 @@ package model;
 
 message comic
 {
-	required string name = 1;
-	repeated tagGroups tagGroups = 2;
-	required img cover = 3;
-	repeated img gallery = 4;
+	required string id = 1;
+	required string name = 2;
+	repeated tagGroups tagGroups = 3;
+	required img cover = 4;
+	repeated img gallery = 5;
 }
 
 message tagGroups
@@ -18,5 +19,6 @@ message tagGroups
 
 message img
 {
-	required string url = 1;
+	required string name = 1;
+	required string url = 2;
 }

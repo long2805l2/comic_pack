@@ -1,16 +1,15 @@
 "use strict";
 
-var fs = require('fs');
-var protobuf = require("protobufjs");
-var protos = require("./protos.js");
-
+const fs = require('fs');
+const protobuf = require("protobufjs");
+const protos = require("./protos.js");
 
 class api
 {
 	constructor()
 	{
 		this.FUNC = {
-			"test1": this.test1,
+			"requestComic": this.requestComic,
 		};
 	};
 
@@ -21,44 +20,53 @@ class api
 		if (!func)
 			return;
 
-		let comic = protos.model.comic.create();
-		comic.name = "test comic";
-		
-		let language = protos.model.tagGroups.create();
-		language.name = "language";
-		language.tags = ["english"];
-		
-		let gens = protos.model.tagGroups.create();
-		gens.name = "gens";
-		gens.tags = ["super hero", "comic"];
-
-		comic.cover = protos.model.img.create();
-		comic.cover.url = "img/cover";
-
-		let img1 = protos.model.img.create();
-		img1.url = "img/img1";
-
-		let img2 = protos.model.img.create();
-		img2.url = "img/img2";
-
-		comic.tagGroups[0] = language;
-		comic.tagGroups[1] = gens;
-		comic.gallery = [img1, img2];
-		
-		let response = JSON.stringify (comic);// func (params);
-
-		let msg = protos.model.comic.encode(comic).finish();
-		response = msg;
-
-		console.log (msg);
+		let response = func (params);
 		if (callback)
 			callback (response);
 	};
 
-	test1 (params)
+	requestComic (params)
 	{
-		return "test1: " + JSON.stringify(params);
+		let comic = protos.model.comic.create();
+		comic.name = "I am a girl";
+		
+		let language = protos.model.tagGroups.create();
+		language.name = "language";
+		language.tags = ["english"];
+		comic.tagGroups.push (language);
+		
+		let gens = protos.model.tagGroups.create();
+		gens.name = "gens";
+		gens.tags = ["manga"];
+
+		comic.tagGroups.push (gens);
+
+		comic.cover = protos.model.img.create();
+		comic.cover.url = "img/cover";
+
+		let dir = "./database/Hourou_Musuko/001.I_Am_a_Girl";
+		let files = fs.readdirSync(dir);
+		for (let id in files)
+		{
+			let file = files [id];
+			let bitmap = fs.readFileSync(dir + "/" + file);
+			let img = protos.model.img.create();
+			img.name = file;
+			img.url = new Buffer(bitmap).toString('base64');
+			
+			comic.gallery.push (img);
+			// break;
+		};
+		
+		let response = JSON.stringify (comic);// func (params);
+		// console.log ("response.length: " + response.length);
+
+		// let msg = protos.model.comic.encode(comic).finish();
+		// console.log ("msg.length: " + msg.length);
+		// response = msg;
+		return response;
 	}
 }
-
+10623716
+10623326
 module.exports = new api ();

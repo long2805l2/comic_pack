@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>none</title>
+		<link href="./assets/css/style.css" rel="stylesheet" type="text/css" />
+		<script>
+			window.onload = function ()
+			{
+				var XHR = new XMLHttpRequest();
+				var urlEncodedData = "";
+				var urlEncodedDataPairs = [];
+				var name;
+				
+				// Turn the data object into an array of URL-encoded key/value pairs.
+				urlEncodedDataPairs.push(encodeURIComponent("cmd") + '=' + encodeURIComponent("requestComic"));
+				urlEncodedDataPairs.push(encodeURIComponent("d") + '=' + encodeURIComponent("123"));
+				urlEncodedData = urlEncodedDataPairs.join('&').replace(/%20/g, '+');
+
+				// Define what happens on successful data submission
+				XHR.addEventListener('load', (event) => {});
+				XHR.onload = () =>
+				{
+					if (!document.body)
+						return;
+
+					let data = JSON.parse (XHR.response);
+					let galleryData = data.gallery;
+					
+					let galleryElement = document.createElement ("div");
+					galleryElement.className = "gallery";
+
+					document.title = "Hourou Musuko - Chapter 1 - " + data.name;
+					document.body.appendChild(galleryElement); 
+					
+					let CODE = {
+						"bmp": "image/bmp",
+						"gif": "image/gif",
+						"jpg": "image/jpeg",
+						"jpeg": "image/jpeg",
+						"png": "image/png",
+						"svg": "image/svg+xml",
+						"tif": "image/tiff",
+						"tiff": "image/tiff"
+					};
+
+					galleryData.forEach (image =>
+					{
+						let nameParts = image.name.split (".");
+						let canvas = document.createElement ("canvas");
+						let context = canvas.getContext("2d");
+						let img = new Image();
+						img.onload = () => {
+							canvas.setAttribute ("alt", nameParts[0]);
+							canvas.height = img.naturalHeight;
+							canvas.width = img.naturalWidth;
+							context.drawImage (img, 0, 0);
+						};
+						img.src = "data:" + CODE [nameParts[1]] + ";base64, " + image.url;
+						galleryElement.appendChild (canvas);
+					});
+				}
+
+				// Define what happens in case of error
+				XHR.addEventListener('error', (event) => console.log('Oops! Something goes wrong.'));
+
+				// Set up our request
+				XHR.open('POST', 'http://localhost:4200/request');
+				XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+				XHR.send(urlEncodedData);
+			}
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
