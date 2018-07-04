@@ -3,6 +3,12 @@ syntax = "proto3";
 package cmd;
 import "model.proto";
 
+message request
+{
+	required string cmd = 1;
+	required bytes msg = 2;
+}
+
 message requestComic
 {
 	required string id = 1;

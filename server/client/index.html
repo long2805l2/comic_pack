@@ -4,36 +4,23 @@
 		<meta charset="UTF-8">
 		<title>none</title>
 		<link href="./assets/css/style.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" async src="./js/protobuf.js"></script>
+		<script type="text/javascript" async src="./assets/js/sequence.js"></script>
 		<script>
 			window.onload = function ()
 			{
-				var XHR = new XMLHttpRequest();
-				var urlEncodedData = "";
-				var urlEncodedDataPairs = [];
-				var name;
-				
-				// Turn the data object into an array of URL-encoded key/value pairs.
-				urlEncodedDataPairs.push(encodeURIComponent("cmd") + '=' + encodeURIComponent("requestComic"));
-				urlEncodedDataPairs.push(encodeURIComponent("d") + '=' + encodeURIComponent("123"));
-				urlEncodedData = urlEncodedDataPairs.join('&').replace(/%20/g, '+');
-
-				// Define what happens on successful data submission
-				XHR.addEventListener('load', (event) => {});
-				XHR.onload = () =>
+				var s = new sequence ();
+				s.add ("init", function (objs, canNext)
 				{
 					if (!document.body)
+					{
+						canNext (false);
 						return;
+					}
 
-					let data = JSON.parse (XHR.response);
-					let galleryData = data.gallery;
-					
-					let galleryElement = document.createElement ("div");
-					galleryElement.className = "gallery";
-
-					document.title = "Hourou Musuko - Chapter 1 - " + data.name;
-					document.body.appendChild(galleryElement); 
-					
-					let CODE = {
+					canNext (true);
+					objs.protos = {};
+					objs.imgCodes = {
 						"bmp": "image/bmp",
 						"gif": "image/gif",
 						"jpg": "image/jpeg",
@@ -43,6 +30,117 @@
 						"tif": "image/tiff",
 						"tiff": "image/tiff"
 					};
+
+				}).add ("parse_proto_cmd", function (objs, canNext)
+				{					
+					protobuf.load ("./protos/cmd.proto", function (error, cmd)
+					{
+						if (error)
+						{
+							canNext (false);
+							throw error;
+						}
+						
+						objs.protos.cmd = cmd;
+						canNext (true);
+					});
+				}).add ("parse_proto_model", function (objs, canNext)
+				{					
+					protobuf.load ("./protos/model.proto", function (error, model)
+					{
+						if (error)
+						{
+							canNext (false);
+							throw error;
+						}
+
+						objs.protos.model = model;
+						canNext (true);
+					});
+				}).add ("build_request", function (objs, canNext)
+				{
+					var requestComicBuilder = objs.protos.cmd.lookupType ("cmd.requestComic");
+					var content = {
+						id: "1"
+					};
+
+					var error = requestComicBuilder.verify(content);
+					if (error)
+					{
+						canNext (false);
+						throw Error(error);
+					}
+					var message = requestComicBuilder.create (content);
+					var buffer = requestComicBuilder.encode(message).finish();
+
+					var requestBuilder = objs.protos.cmd.lookupType ("cmd.request");
+					content = {
+						cmd: "requestComic",
+						msg: buffer
+					}
+
+					error = requestBuilder.verify(content);
+					if (error)
+					{
+						canNext (false);
+						throw Error(error);
+					}
+					message = requestBuilder.create (content);
+					buffer = requestBuilder.encode(message).finish();
+					objs.request = buffer;
+					canNext (true);
+					
+				}).add ("send_request", function (objs, canNext)
+				{
+					var XHR = new XMLHttpRequest();
+					// var urlEncodedData = "";
+					// var urlEncodedDataPairs = [];
+
+					// Turn the data object into an array of URL-encoded key/value pairs.
+					// urlEncodedDataPairs.push(encodeURIComponent("cmd") + '=' + encodeURIComponent("requestComic"));
+					// urlEncodedDataPairs.push(encodeURIComponent("d") + '=' + encodeURIComponent("123"));
+					// urlEncodedData = urlEncodedDataPairs.join('&').replace(/%20/g, '+');
+
+					// Define what happens on successful data submission
+					XHR.addEventListener('load', (event) => console.log('load...'));
+					XHR.onload = function ()
+					{
+						objs.response = XHR.response;
+						canNext (true);
+					}
+
+					// Define what happens in case of error
+					XHR.addEventListener('error', function (event)
+					{
+						console.log('Oops! Something goes wrong.');
+						canNext (false);
+					});
+
+					// Set up our request
+					XHR.open('POST', 'http://localhost:4200/request');
+					XHR.setRequestHeader('Content-Type', 'application/octet-stream');
+					// XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+					XHR.responseType = "arraybuffer";
+					// XHR.send(urlEncodedData);
+					XHR.send(objs.request);
+				}).add ("render", function (objs, canNext)
+				{
+					let comicMessage = objs.protos.model.lookupType ("model.comic");
+					if (!comicMessage)
+					{
+						canNext (false);
+						return;
+					}
+					
+					let ui8 = new Uint8Array(objs.response);
+					let data = comicMessage.decode (ui8);
+					let galleryData = data.gallery;
+					
+					let galleryElement = document.createElement ("div");
+					galleryElement.className = "gallery";
+
+					document.title = "Hourou Musuko - Chapter 1 - " + data.name;
+					document.body.appendChild(galleryElement); 
 
 					galleryData.forEach (image =>
 					{
@@ -56,18 +154,12 @@
 							canvas.width = img.naturalWidth;
 							context.drawImage (img, 0, 0);
 						};
-						img.src = "data:" + CODE [nameParts[1]] + ";base64, " + image.url;
+						img.src = "data:" + objs.imgCodes [nameParts[1]] + ";base64, " + image.url;
 						galleryElement.appendChild (canvas);
 					});
-				}
-
-				// Define what happens in case of error
-				XHR.addEventListener('error', (event) => console.log('Oops! Something goes wrong.'));
-
-				// Set up our request
-				XHR.open('POST', 'http://localhost:4200/request');
-				XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-				XHR.send(urlEncodedData);
+					
+					canNext (true);
+				}).run();
 			}
 		</script>
 	</head>

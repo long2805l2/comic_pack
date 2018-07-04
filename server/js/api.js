@@ -13,13 +13,21 @@ class api
 		};
 	};
 
-	//request/cmd?d=...
-	call (cmd, params, callback)
+	call (requestBuffer, callback)
 	{
+		let request = protos.cmd.request.decode(requestBuffer);
+		let cmd = request.cmd;
+		let msg = request.msg;
+
+		let parser = protos.cmd [cmd];
+		if (!parser)
+			return;
+		
 		let func = this.FUNC[cmd];
 		if (!func)
 			return;
 
+		let params = parser.decode (msg);
 		let response = func (params);
 		if (callback)
 			callback (response);
@@ -55,18 +63,12 @@ class api
 			img.url = new Buffer(bitmap).toString('base64');
 			
 			comic.gallery.push (img);
-			// break;
+			break;
 		};
 		
-		let response = JSON.stringify (comic);// func (params);
-		// console.log ("response.length: " + response.length);
-
-		// let msg = protos.model.comic.encode(comic).finish();
-		// console.log ("msg.length: " + msg.length);
-		// response = msg;
+		let response = protos.model.comic.encode(comic).finish();
 		return response;
 	}
 }
-10623716
-10623326
+
 module.exports = new api ();

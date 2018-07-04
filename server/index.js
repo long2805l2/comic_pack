@@ -8,29 +8,26 @@ var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var API = require ('./js/api.js');
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
+app.use(bodyParser.raw());
 
 app.use(express.static(__dirname + '/node_modules'));
 app.use('/assets', express.static(__dirname + '/client/assets'));
+app.use('/protos', express.static(__dirname + '/protos'));
+app.use('/js/protobuf.js', express.static(__dirname + '/node_modules/protobufjs/dist/protobuf.js'));
 
 app.get('/', function(request, response, next)
 {
-	response.sendFile(__dirname + "/client/index.html")
+	response.sendFile(__dirname + "/client/index.html");
 });
 
 app.post('/request', function(request, response, next)
 {
-	let cmd = request.body.cmd;
-	let encode = "";
-	if (request.body.e)
-		encode = request.body.e;
+	console.log("onpost");
+	console.log (request.body);
 
-	let params = request.body.d;
-	// if (encode)
-	// 	params = decode (params);
-
-	API.call (cmd, params, function (obj)
+	API.call (request.body, function (obj)
 	{
 		response.status (200);
 		response.send (obj);
