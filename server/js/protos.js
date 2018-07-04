@@ -116,6 +116,125 @@ $root.cmd = (function() {
         return request;
     })();
 
+    cmd.response = (function() {
+
+        function response(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        response.prototype.cmd = "";
+        response.prototype.error = "";
+        response.prototype.msg = $util.newBuffer([]);
+
+        response.create = function create(properties) {
+            return new response(properties);
+        };
+
+        response.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            writer.uint32(10).string(message.cmd);
+            if (message.error != null && message.hasOwnProperty("error"))
+                writer.uint32(18).string(message.error);
+            if (message.msg != null && message.hasOwnProperty("msg"))
+                writer.uint32(26).bytes(message.msg);
+            return writer;
+        };
+
+        response.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        response.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.cmd.response();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.cmd = reader.string();
+                    break;
+                case 2:
+                    message.error = reader.string();
+                    break;
+                case 3:
+                    message.msg = reader.bytes();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            if (!message.hasOwnProperty("cmd"))
+                throw $util.ProtocolError("missing required 'cmd'", { instance: message });
+            return message;
+        };
+
+        response.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        response.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (!$util.isString(message.cmd))
+                return "cmd: string expected";
+            if (message.error != null && message.hasOwnProperty("error"))
+                if (!$util.isString(message.error))
+                    return "error: string expected";
+            if (message.msg != null && message.hasOwnProperty("msg"))
+                if (!(message.msg && typeof message.msg.length === "number" || $util.isString(message.msg)))
+                    return "msg: buffer expected";
+            return null;
+        };
+
+        response.fromObject = function fromObject(object) {
+            if (object instanceof $root.cmd.response)
+                return object;
+            var message = new $root.cmd.response();
+            if (object.cmd != null)
+                message.cmd = String(object.cmd);
+            if (object.error != null)
+                message.error = String(object.error);
+            if (object.msg != null)
+                if (typeof object.msg === "string")
+                    $util.base64.decode(object.msg, message.msg = $util.newBuffer($util.base64.length(object.msg)), 0);
+                else if (object.msg.length)
+                    message.msg = object.msg;
+            return message;
+        };
+
+        response.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults) {
+                object.cmd = "";
+                object.error = "";
+                object.msg = options.bytes === String ? "" : [];
+            }
+            if (message.cmd != null && message.hasOwnProperty("cmd"))
+                object.cmd = message.cmd;
+            if (message.error != null && message.hasOwnProperty("error"))
+                object.error = message.error;
+            if (message.msg != null && message.hasOwnProperty("msg"))
+                object.msg = options.bytes === String ? $util.base64.encode(message.msg, 0, message.msg.length) : options.bytes === Array ? Array.prototype.slice.call(message.msg) : message.msg;
+            return object;
+        };
+
+        response.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return response;
+    })();
+
     cmd.requestComic = (function() {
 
         function requestComic(properties) {
@@ -212,7 +331,6 @@ $root.cmd = (function() {
                         this[keys[i]] = properties[keys[i]];
         }
 
-        responseComic.prototype.error = "";
         responseComic.prototype.comic = null;
 
         responseComic.create = function create(properties) {
@@ -222,10 +340,7 @@ $root.cmd = (function() {
         responseComic.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.error != null && message.hasOwnProperty("error"))
-                writer.uint32(10).string(message.error);
-            if (message.comic != null && message.hasOwnProperty("comic"))
-                $root.model.comic.encode(message.comic, writer.uint32(18).fork()).ldelim();
+            $root.model.comic.encode(message.comic, writer.uint32(10).fork()).ldelim();
             return writer;
         };
 
@@ -241,9 +356,6 @@ $root.cmd = (function() {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
                 case 1:
-                    message.error = reader.string();
-                    break;
-                case 2:
                     message.comic = $root.model.comic.decode(reader, reader.uint32());
                     break;
                 default:
@@ -251,6 +363,8 @@ $root.cmd = (function() {
                     break;
                 }
             }
+            if (!message.hasOwnProperty("comic"))
+                throw $util.ProtocolError("missing required 'comic'", { instance: message });
             return message;
         };
 
@@ -263,10 +377,7 @@ $root.cmd = (function() {
         responseComic.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (message.error != null && message.hasOwnProperty("error"))
-                if (!$util.isString(message.error))
-                    return "error: string expected";
-            if (message.comic != null && message.hasOwnProperty("comic")) {
+            {
                 var error = $root.model.comic.verify(message.comic);
                 if (error)
                     return "comic." + error;
@@ -278,8 +389,6 @@ $root.cmd = (function() {
             if (object instanceof $root.cmd.responseComic)
                 return object;
             var message = new $root.cmd.responseComic();
-            if (object.error != null)
-                message.error = String(object.error);
             if (object.comic != null) {
                 if (typeof object.comic !== "object")
                     throw TypeError(".cmd.responseComic.comic: object expected");
@@ -292,12 +401,8 @@ $root.cmd = (function() {
             if (!options)
                 options = {};
             var object = {};
-            if (options.defaults) {
-                object.error = "";
+            if (options.defaults)
                 object.comic = null;
-            }
-            if (message.error != null && message.hasOwnProperty("error"))
-                object.error = message.error;
             if (message.comic != null && message.hasOwnProperty("comic"))
                 object.comic = $root.model.comic.toObject(message.comic, options);
             return object;

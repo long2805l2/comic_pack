@@ -9,6 +9,13 @@ message request
 	required bytes msg = 2;
 }
 
+message response
+{
+	required string cmd = 1;
+	optional string error = 2;
+	optional bytes msg = 3;
+}
+
 message requestComic
 {
 	required string id = 1;
@@ -16,6 +23,5 @@ message requestComic
 
 message responseComic
 {
-	optional string error = 1;
-	optional comic comic = 2;
+	required comic comic = 1;
 }

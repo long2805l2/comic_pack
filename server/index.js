@@ -24,9 +24,6 @@ app.get('/', function(request, response, next)
 
 app.post('/request', function(request, response, next)
 {
-	console.log("onpost");
-	console.log (request.body);
-
 	API.call (request.body, function (obj)
 	{
 		response.status (200);

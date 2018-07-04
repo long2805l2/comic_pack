@@ -9,7 +9,7 @@ class api
 	constructor()
 	{
 		this.FUNC = {
-			"requestComic": this.requestComic,
+			"requestComic": this.requestComic.bind(this),
 		};
 	};
 
@@ -66,8 +66,29 @@ class api
 			break;
 		};
 		
-		let response = protos.model.comic.encode(comic).finish();
-		return response;
+		let message = protos.cmd.responseComic.create ();
+		message.comic = comic;
+		
+		return this.responseMessage ("responseComic", message);
+	}
+
+	responseError (cmd, error)
+	{
+		let builder = protos.cmd.response.create ();
+		builder.cmd = cmd;
+		builder.error = error;
+
+		return protos.cmd.response.encode(builder).finish();
+	}
+
+	responseMessage (cmd, message)
+	{
+		let builder = protos.cmd.response.create ();
+		builder.cmd = cmd;
+		builder.error = undefined;
+		builder.msg = protos.cmd[cmd].encode(message).finish();
+
+		return protos.cmd.response.encode(builder).finish();
 	}
 }
 

@@ -102,7 +102,7 @@
 					// urlEncodedData = urlEncodedDataPairs.join('&').replace(/%20/g, '+');
 
 					// Define what happens on successful data submission
-					XHR.addEventListener('load', (event) => console.log('load...'));
+					XHR.addEventListener('load', (event) => {});
 					XHR.onload = function ()
 					{
 						objs.response = XHR.response;
@@ -123,17 +123,38 @@
 					XHR.responseType = "arraybuffer";
 					// XHR.send(urlEncodedData);
 					XHR.send(objs.request);
-				}).add ("render", function (objs, canNext)
+				}).add ("parse_response", function (objs, canNext)
 				{
-					let comicMessage = objs.protos.model.lookupType ("model.comic");
-					if (!comicMessage)
+					let responseParser = objs.protos.cmd.lookupType ("cmd.response");
+					if (!responseParser)
 					{
 						canNext (false);
 						return;
 					}
 					
 					let ui8 = new Uint8Array(objs.response);
-					let data = comicMessage.decode (ui8);
+					let responseMessage = responseParser.decode (ui8);
+					if (responseMessage.error)
+					{
+						console.log (responseMessage.error);
+						canNext (false);
+						return;
+					}
+
+					let cmd = responseMessage.cmd;
+					let cmdParser = objs.protos.cmd.lookupType ("cmd." + cmd);
+					if (!cmdParser)
+					{
+						canNext (false);
+						return;
+					}
+					
+					ui8 = new Uint8Array(responseMessage.msg);
+					objs.reponseMsg = cmdParser.decode (ui8);
+					canNext (true);
+				}).add ("render", function (objs, canNext)
+				{
+					let data = objs.reponseMsg.comic;
 					let galleryData = data.gallery;
 					
 					let galleryElement = document.createElement ("div");
