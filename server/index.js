@@ -15,7 +15,7 @@ var API = require ('./js/api.js');
 app.use(express.static(__dirname + '/node_modules'));
 app.use('/assets', express.static(__dirname + '/client/assets'));
 app.use('/protos', express.static(__dirname + '/protos'));
-app.use('/js/protobuf.js', express.static(__dirname + '/node_modules/protobufjs/dist/protobuf.js'));
+app.use('/assets/js/protobuf.js', express.static(__dirname + '/node_modules/protobufjs/dist/protobuf.js'));
 
 app.get('/', function(request, response, next)
 {

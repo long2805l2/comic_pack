@@ -3,6 +3,9 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Uploader</title>
+		<script type="text/javascript" async src="./assets/js/protobuf.js"></script>
+		<script type="text/javascript" async src="./assets/js/sequence.js"></script>
+		<script type="text/javascript" async src="./assets/js/message.js"></script>
 		<link href="./assets/css/style.css" rel="stylesheet" type="text/css" />
 		<style>
 			form {
@@ -66,13 +69,16 @@
 			<div>
 				<label for="image_uploads">Add</label>
 				<input type="file" id="image_uploads" name="image_uploads" accept=".jpg, .jpeg, .png" multiple>
-				<button>Submit</button>
+				<label id="submitBtn">Submit</label>
 			</div>
 			<div class="preview">
 				<p class="hint">Drop files here!</p>
 			</div>
 		</form>
 		<script>
+			var submitBtn = document.getElementById('submitBtn');
+			submitBtn.addEventListener('click', submit);
+
 			var input = document.querySelector('input');
 			input.addEventListener('change', updateImageDisplay);
 			
@@ -106,13 +112,13 @@
 				for (var i = 0; i < files.length; i++)
 				{
 					var file = files [i];
-					var listItem = addFile (file);
-					list.appendChild(listItem);
+					addFile (file);
 				}
 			}, false);
 			
-			var list = document.createElement('ol');
-			preview.appendChild(list);
+			var listFiles = [];
+			var listElements = document.createElement('ol');
+			preview.appendChild(listElements);
 
 			function updateImageDisplay()
 			{
@@ -120,15 +126,12 @@
 				for(var i = 0; i < curFiles.length; i++)
 				{
 					var file = curFiles[i];
-					var listItem = addFile (file);
-					list.appendChild(listItem);
+					addFile (file);
 				}
 			}
 
 			function addFile (file)
 			{
-				console.log (file);
-				
 				var listItem = document.createElement('li');
 				var para = document.createElement('p');
 				if(validFileType(file))
@@ -136,17 +139,31 @@
 					para.textContent = 'File name ' + file.name + ', file size ' + returnFileSize(file.size) + '.';
 					var image = document.createElement('img');
 					image.src = window.URL.createObjectURL(file);
-					console.log (image.src);
 					listItem.appendChild(image);
 					listItem.appendChild(para);
+
+					let img = new Image ();
+					img.onload = () =>
+					{
+						var canvas = document.createElement('canvas');
+						canvas.width = img.naturalWidth;
+						canvas.height = img.naturalHeight;
+
+						canvas.getContext('2d').drawImage(img, 0, 0);
+						listFiles.push ({
+							name: file.name,
+							url: canvas.toDataURL('image/png')
+						});
+					};
+					img.src = image.src;
 				}
 				else
 				{
 					para.textContent = 'File name ' + file.name + ': Not a valid file type. Update your selection.';
 					listItem.appendChild(para);
 				}
-
-				return listItem;
+				
+				listElements.appendChild(listItem);
 			}
 
 			var fileTypes = [
@@ -170,6 +187,47 @@
 				if(number < 1048576)
 					return (number/1024).toFixed(1) + 'KB';
 				return (number/1048576).toFixed(1) + 'MB';
+			}
+
+			function submit ()
+			{
+				// var formData = new FormData();
+				console.log (listFiles);
+				for (let id = 0; id < listFiles.length; id ++)
+				{
+					let file = listFiles [id];
+					// formData.append(file.name, file);
+				}
+				/*
+				let XHR = new XMLHttpRequest();
+				xhr.onreadystatechange = function ()
+				{
+					if (this.readyState == 4 && this.status == 200)
+					{
+						var response = JSON.parse(this.response);
+						console.log(response);
+					}
+					else
+					{
+					}
+				}
+				
+				xhr.onprogress = function (e)
+				{
+					if (!e.lengthComputable)
+						return;
+					
+					var loaded = Math.round((e.loaded / e.total) * 100);
+					var zeros = '';
+					
+					if (loaded < 10) zeros = '00';
+					else if (loaded < 100) zeros = '0';
+					console.log (zeros + loaded.toString());
+				}
+				
+				xhr.open('POST', '/upload', true);
+				xhr.send(formData);
+				*/
 			}
 		</script>
 	</body>

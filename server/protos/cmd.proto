@@ -25,3 +25,14 @@ message responseComic
 {
 	required comic comic = 1;
 }
+
+message requestUpload
+{
+	required string name = 1;
+	repeated img files = 5;
+}
+
+message responseUpload
+{
+	required string id = 1;
+}
