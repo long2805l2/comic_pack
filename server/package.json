@@ -1,0 +1,19 @@
+{
+	"name": "server",
+	"version": "0.0.1",
+	"description": "comic-pack server side",
+	"main": "index.js",
+	"scripts": {
+		"start": "node ../node_modules/nodemon/bin/nodemon.js --watch ../ ./index.js"
+	},
+	"author": "longph",
+	"license": "ISC",
+	"dependencies": {
+		"body-parser": "^1.18.3",
+		"cors": "^2.8.4",
+		"express": "^4.16.3",
+		"nodemon": "^1.17.5",
+		"protobufjs": "^6.8.6",
+		"socket.io": "^2.1.1"
+	}
+}

@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package protos;
+
+message request
+{
+	required string cmd = 1;
+	required bytes msg = 2;
+}
+
+message response
+{
+	required string cmd = 1;
+	optional string error = 2;
+	optional bytes msg = 3;
+}
+
+message requestComic
+{
+	required string id = 1;
+}
+
+message responseComic
+{
+	required comic comic = 1;
+}
+
+message requestUpload
+{
+	required string name = 1;
+	repeated img files = 5;
+}
+
+message responseUpload
+{
+	required string id = 1;
+}
+
+message comic
+{
+	required string id = 1;
+	required string name = 2;
+	repeated tagGroups tagGroups = 3;
+	required img cover = 4;
+	repeated img gallery = 5;
+}
+
+message tagGroups
+{
+	required string name = 1;
+	repeated string tags = 2;
+}
+
+message img
+{
+	required string name = 1;
+	required string url = 2;
+}

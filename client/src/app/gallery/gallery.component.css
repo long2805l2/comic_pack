@@ -1,0 +1,10 @@
+:host ::ng-deep #viewer {
+    width: 100%;
+    min-width: 800px;
+    max-width: 1600px;
+}
+
+:host ::ng-deep #viewer canvas {
+    width: 100%;
+    pointer-events: none;
+}

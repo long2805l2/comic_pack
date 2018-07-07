@@ -1,0 +1,15 @@
+{
+	"name": "message",
+	"version": "0.0.1",
+	"description": "comic-pack message",
+	"main": "index.js",
+	"scripts": {
+		"build_server": "node ../node_modules/protobufjs/cli/bin/pbjs -t static-module -p ./protos -w commonjs -o ./protos.js ./protos.proto",
+		"build_client": "node ../node_modules/protobufjs/cli/bin/pbts -o ./protos.d.ts ./protos.js"
+	},
+	"author": "longph",
+	"license": "ISC",
+	"dependencies": {
+	  "protobufjs": "^6.8.6"
+	}
+}
