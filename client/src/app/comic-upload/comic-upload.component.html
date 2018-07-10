@@ -1,3 +1,63 @@
-<p>
-  comic-upload works!
-</p>
+<div id="path" class="property">
+	<label class="name">Path</label>
+	<div class="value">
+		<ul>
+			<li>Hourou Musuko</li>
+			<li>/</li>
+			<li>Chapter 001</li>
+		</ul>
+	</div>
+</div>
+<div id="name" class="property">
+	<label class="name">Name</label>
+	<div class="value">
+		<input type="text" value="I am a girl"/>
+	</div>
+</div>
+<div id="desc" class="property">
+	<label class="name">Description</label>
+	<div class="value">
+		<textarea></textarea>
+	</div>
+</div>
+<div id="language" class="property">
+	<label class="name">Language</label>
+	<div class="value">
+		<select>
+			<option value="english">English</option>
+			<option value="japan">Japan</option>
+			<option value="vietnam">Viet Nam</option>
+		</select>
+	</div>
+</div>
+<div id="genre" class="property">
+	<label class="name">Genre</label>
+	<div class="value">
+		<select>
+			<option value="comic">Comic</option>
+			<option value="manga">Manga</option>
+		</select>
+	</div>
+</div>
+<div id="tags" class="property">
+	<label class="name">Tags</label>
+	<div class="value">
+		<ul>
+			<li><span>Drama</span><a>x</a></li>
+			<li><span>Slice of life</span><a>x</a></li>
+			<li><input type="text" /></li>
+		</ul>
+	</div>
+</div>
+<div id="gallery" class="property">
+	<label class="name">Gallery</label>
+	<div class="value">
+		<form>
+			<label for="image_uploads">Add</label>
+			<input type="file" id="image_uploads" name="image_uploads" accept=".jpg, .jpeg, .png" multiple>
+			<div id="image_preview" class="preview">
+				<p>drag here</p>
+			</div>
+		</form>
+	</div>
+</div>

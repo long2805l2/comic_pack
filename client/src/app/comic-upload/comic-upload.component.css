@@ -1,0 +1,172 @@
+:host .container {
+	display: grid;
+	grid-auto-flow: dense;
+	grid-auto-rows: 6.25em;
+	grid-gap: 0.25em;
+	grid-template-columns: repeat(auto-fit, 6.25em);
+}
+
+:host .container .item {
+	align-content: center;
+	background-color: rgb(90, 90, 90);
+	border: 1px solid #333333;
+	border-radius: 0.25em;
+	display: grid;
+	justify-content: center;
+}
+
+:host .r1  { grid-row: span 1;  }
+:host .r2  { grid-row: span 2;  }
+:host .r3  { grid-row: span 3;  }
+:host .r4  { grid-row: span 4;  }
+:host .r5  { grid-row: span 5;  }
+:host .r6  { grid-row: span 6;  }
+:host .r7  { grid-row: span 7;  }
+:host .r9  { grid-row: span 9;  }
+:host .r8  { grid-row: span 8;  }
+:host .r10 { grid-row: span 10; }
+:host .r11 { grid-row: span 11; }
+:host .r12 { grid-row: span 12; }
+
+:host .c1  { grid-column: span 1;  }
+:host .c2  { grid-column: span 2;  }
+:host .c3  { grid-column: span 3;  }
+:host .c4  { grid-column: span 4;  }
+:host .c5  { grid-column: span 5;  }
+:host .c6  { grid-column: span 6;  }
+:host .c7  { grid-column: span 7;  }
+:host .c9  { grid-column: span 9;  }
+:host .c8  { grid-column: span 8;  }
+:host .c10 { grid-column: span 10; }
+:host .c11 { grid-column: span 11; }
+:host .c12 { grid-column: span 12; }
+
+:host input, textarea, select{
+	background-color: #666666;
+	border: none;
+	font-size: 1.25em;
+}
+
+:host select option{
+	background-color: #666666;
+	border: none;
+	font-size: 0.8em;
+}
+
+:host .property
+{
+	display: grid;
+	grid-auto-flow: dense;
+	grid-template-columns: 8.25em auto;
+	grid-gap: 0.25em;
+	margin-bottom: 0.25em;
+	max-width: 800px;
+	margin: 0px auto;
+}
+
+:host .property .name
+{
+	display: grid;
+	grid-column: span 1;
+	line-height: 2em;
+	text-align: right;
+	font-weight: bold;
+	color: #666666;
+}
+
+:host .property .value
+{
+	display: grid;
+	grid-column: span 1;
+	background-color: #666666;
+	border: 1px #222222 solid;
+	padding: 0.25em;
+}
+
+:host .property .value ul
+{
+    list-style-type: none;
+    overflow: hidden;
+}
+
+:host .property .value ul li
+{
+	display: inline-block;
+	margin-right: 0.25em;
+}
+
+:host .property .value ul li span
+{
+	padding: 0.25em;
+	background-color: #FFFFFF33;
+}
+
+:host .property .value ul li a
+{
+	padding: 0.25em;
+	background-color: #FFFFFF33;
+}
+/****************************************************/
+:host .property .value form {
+	position:relative;
+}
+/* 
+*/
+:host .property .value form input[type="file"] {
+	visibility: hidden;
+	width: 0px;
+}
+
+:host .property .value form ol {
+	padding-left: 0;
+}
+
+:host .property .value form li {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 10px;
+	list-style-type: none;
+}
+
+:host .property .value form img {
+	height: 64px;
+	order: 1;
+}
+
+:host .property .value form p {
+	line-height: 32px;
+	padding-left: 10px;
+}
+
+:host .property .value form label, form button {
+	padding: 5px 10px;
+	font-size: 0.8rem;
+	height: auto;
+}
+
+:host .property .value form label:hover, form button:hover {
+	color: white;
+}
+
+:host .property .value form label:active, form button:active {
+	color: white;
+}
+
+:host ::ng-deep .property .value form ol {
+	list-style: none;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(6.25em, 1fr));
+}
+
+:host ::ng-deep .property .value form ol li {
+	grid-column: span 1;
+    text-align: center;
+}
+
+:host ::ng-deep .property .value form ol li img {
+	height: 5em;
+	order: 1;
+}
+
+:host ::ng-deep .property .value form ol li p {
+}
