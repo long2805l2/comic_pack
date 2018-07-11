@@ -11,8 +11,37 @@ body {
 	background-color:#333333;
     font-family: Verdana, Geneva, sans-serif;
     font-family: "Gotham Rounded A", "Gotham Rounded B", "Helvetica Neue", Helvetica, Arial, sans-serif, "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+	font-size: 16px;
 }
 
 a {
 	text-decoration: none;
 }
+
+/*https://docs.microsoft.com/en-us/windows/uwp/design/style/segoe-ui-symbol-font*/
+@font-face {
+	font-family: 'FabricIcons';
+	src: url("./assets/fonts/FabricMDL2Icons-2.35.woff") format("woff");
+}
+
+[class^="fui-"],
+[class*="fui-"] {
+	font-family: 'FabricIcons', sans-serif;
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.fui-GlobalNavButton:before { content: "\E700"; }
+.fui-Edit:before { content: "\E70F"; }
+.fui-Add:before { content: "\E710"; }
+.fui-Cancel:before { content: "\E711"; }
+.fui-More:before { content: "\E712"; }
+.fui-Settings:before { content: "\E713"; }
+.fui-Zoom:before { content: "\E71E"; }
+.fui-ZoomOut:before { content: "\E71F"; }
+.fui-Search:before { content: "\E721"; }
