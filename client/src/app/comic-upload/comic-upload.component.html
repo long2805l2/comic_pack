@@ -42,21 +42,12 @@
 <div id="tags" class="property">
 	<label class="name">Tags</label>
 	<div class="value">
-		<ul>
-			<li><span>Drama</span><a>x</a></li>
-			<li><span>Slice of life</span><a>x</a></li>
-			<li><input type="text" /></li>
-		</ul>
+		<app-control-tags></app-control-tags>
 	</div>
 </div>
 <div id="gallery" class="property">
 	<label class="name">Gallery</label>
 	<div class="value">
-		<form>
-			<label for="image_uploads">Add</label>
-			<input type="file" id="image_uploads" name="image_uploads" accept=".jpg, .jpeg, .png" multiple>
-			<div id="image_preview" class="preview">
-			</div>
-		</form>
+		<app-control-upload></app-control-upload>
 	</div>
 </div>

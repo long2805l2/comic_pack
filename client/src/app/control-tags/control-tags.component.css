@@ -1,0 +1,46 @@
+:host input{
+	background-color: #666666;
+	border: none;
+	font-size: 1.25em;
+}
+
+:host ul
+{
+    list-style-type: none;
+    overflow: hidden;
+}
+
+:host ul li
+{
+	display: inline-block;
+	margin-right: 0.25em;
+	line-height: 1.25em;
+}
+
+:host ul li span
+{
+	display: inline-block;
+	padding: 0.25em 0.25em 0.25em 0.5em;
+	border-radius: 0.5em 0em 0em 0.5em;
+	background-color: rgb(75, 75, 75);
+}
+
+:host ul li a
+{
+	display: inline-block;
+    cursor: pointer;
+	padding: 0.25em 0.35em 0.25em 0.25em;
+	border-radius: 0em 0.5em 0.5em 0em;
+	background-color: rgb(60, 60, 60);
+	text-align: center;
+}
+
+:host ul li a:hover
+{
+	background-color: #FFFFFF33;
+}
+
+:host ul li a:active
+{
+	background-color: rgba(255, 255, 255, 0.25);
+}

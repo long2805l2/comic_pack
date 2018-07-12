@@ -1,0 +1,64 @@
+:host form {
+	position:relative;
+}
+
+:host form input {
+	visibility: hidden;
+	width: 0px;
+}
+
+:host form ol {
+	padding-left: 0;
+}
+
+:host form li {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 10px;
+	list-style-type: none;
+}
+
+:host form img {
+	height: 64px;
+	order: 1;
+}
+
+:host form p {
+	line-height: 32px;
+	padding-left: 10px;
+}
+
+:host form label, button {
+	padding: 0.25em;
+	font-size: 1.25em;
+	background-color: #333333;
+	border: 1px black solid;
+	margin-right: 0.25em;
+}
+
+:host form label:hover, form button:hover {
+	color: white;
+}
+
+:host form label:active, form button:active {
+	color: white;
+}
+
+:host ::ng-deep form ol {
+	list-style: none;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(6.25em, 1fr));
+}
+
+:host ::ng-deep form ol li {
+	grid-column: span 1;
+    text-align: center;
+}
+
+:host ::ng-deep form ol li img {
+	height: 5em;
+	order: 1;
+}
+
+:host ::ng-deep form ol li p {
+}
